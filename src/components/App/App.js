@@ -2,8 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import './App.css';
-import TakeHomeCard from './features/location/TakeHomeCard';
-import store from './store';
+import TakeHomeCard from '../../features/location/TakeHomeCard';
+import store from '../../store';
 
 
 function App() {
