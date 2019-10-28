@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import UtilsService from './services/utils';
 import './App.css';
+import UtilsService from './services/utils';
+import Title from './components/Title';
+import Distance from './components/Distance';
+import Location from './components/Location';
 
 async function getIp() {
   const response = await fetch('https://api.ipify.org/?format=json')
@@ -75,12 +78,13 @@ function App() {
     return <div className="App">Loading...</div>
   }
 
+  const titleText = isInUSA ? "You're where you should be!" : "Pack your bags!";
+
   return (
     <div className="App">
-      {isInUSA && <div>You're where you should be!</div>}
-      {!isInUSA && <div>Pack your bags!</div>}
-      {howFar && <div>You're {howFar} miles away from USA</div>}
-      {location && <div>Location: {location}</div>}
+      <Title text={titleText} />
+      <Distance howFar={howFar} />
+      <Location text={location} />
     </div>
   );
 }
