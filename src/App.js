@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import UtilsService from './services/utils';
 import './App.css';
 
 async function getIp() {
@@ -16,21 +17,22 @@ async function getLocationInfoByIp(ip) {
   const regionCode = data['region_code']
   const latitude = data['latitude']
   const longitude = data['longitude']
-  return {countryCode, regionCode, coordinates: {lat: latitude, lng: longitude}}
+  return {countryCode, regionCode, lat: latitude, lon: longitude}
 }
 
 function getIsInUSA(countryCode) {
   return countryCode === 'US'
 }
 
-async function getHowFarFromWashingtonDC(coordinates) {
-  // mock distance value
-  return 1000
+async function getHowFarFromWashingtonDC(lat, lon) {
+  const washingtonLat = 38.89511;
+  const washingtonLon = -77.03637;
+  return UtilsService.getDistanceFromLatLonInMiles(washingtonLat, washingtonLon, lat, lon)
 }
 
 async function analyzeLocationInformation() {
   const ip = await getIp()
-  const {countryCode, regionCode, coordinates} = await getLocationInfoByIp(ip)
+  const {countryCode, regionCode, lat, lon} = await getLocationInfoByIp(ip)
   const response = {
     isInUSA: null,
     location: `${regionCode}, ${countryCode}`,
@@ -42,7 +44,7 @@ async function analyzeLocationInformation() {
     response['isInUSA'] = true
     return response
   } else {
-    const howFar = await getHowFarFromWashingtonDC(coordinates)
+    const howFar = await getHowFarFromWashingtonDC(lat, lon)
     response['isInUSA'] = false
     response['howFar'] = howFar
     return response
@@ -72,7 +74,6 @@ function App() {
   if (loading) {
     return <div className="App">Loading...</div>
   }
-  console.log({isInUSA})
 
   return (
     <div className="App">
